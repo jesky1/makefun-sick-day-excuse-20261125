@@ -77,7 +77,8 @@ test('gate rejects over-long, blank, multi-line and sloppy lines', () => {
 });
 
 test('gate accepts a 200-character multi-word line', () => {
-  const words = Array.from({ length: 40 }, (_, i) => 'a' + String(i).padStart(3, '0'));
+  const words = Array.from({ length: 40 }, (_, i) =>
+    'a' + String.fromCharCode(97 + Math.floor(i / 26)) + String.fromCharCode(97 + (i % 26)) + 'z');
   const line = words.join(' ') + '.';
   assert.equal(line.length, 200);
   assert.ok(!gateRejects(line));
