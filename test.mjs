@@ -53,6 +53,9 @@ function gateRejects(line) {
   if (line.trim().split(/\s+/).length < 5) return true;
   if (/https?:\/\//i.test(line)) return true;
   if (line !== line.trim()) return true;
+  const words = line.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/);
+  if (words.some((w) => words.filter((x) => x === w).length >= 3)) return true;
+  if (!/[.!?]$/.test(line)) return true;
   return false;
 }
 
@@ -69,6 +72,8 @@ test('gate rejects over-long, blank, multi-line and sloppy lines', () => {
   assert.ok(gateRejects('12345 !!! ???'), 'no letters rejected');
   assert.ok(gateRejects('sick today'), 'under 5 words rejected');
   assert.ok(gateRejects('see https://example.com I am sick'), 'link rejected');
+  assert.ok(gateRejects('sick sick sick day today please'), 'one word three times rejected');
+  assert.ok(gateRejects('Sneezed so hard today I stayed home'), 'no terminal punctuation rejected');
 });
 
 test('gate accepts a 200-character multi-word line', () => {

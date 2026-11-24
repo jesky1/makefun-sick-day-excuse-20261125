@@ -15,6 +15,11 @@ function excuseIsOk(line: string): string | null {
   if (line.trim().split(/\s+/).length < 5) return 'needs at least 5 words';
   if (/https?:\/\//i.test(line)) return 'must not contain a link';
   if (line !== line.trim()) return 'must not start or end with whitespace';
+  const words = line.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/);
+  if (words.some((w) => words.filter((x) => x === w).length >= 3)) {
+    return 'must not repeat one word three times';
+  }
+  if (!/[.!?]$/.test(line)) return 'must end with terminal punctuation';
   return null;
 }
 
